@@ -1,3 +1,8 @@
+def COLOR_MAP = [
+    'SUCCESS': 'good',
+    'FAILURE': 'danger',
+]
+
 pipeline {
     agent any
     tools {
@@ -62,14 +67,16 @@ pipeline {
                 }
             }
         }
-        stage("Quality Gate"){
-            steps{
+
+        stage ("Quality Gate") {
+            steps {
                 timeout(time:1, unit: 'HOURS') {
                     waitForQualityGate abortPipeline: true
                 }
             }
         }
-         stage ("Upload Artifact") {
+
+        stage ("Upload Artifact") {
             steps {
                 nexusArtifactUploader(
                   nexusVersion: 'nexus3',
@@ -88,7 +95,6 @@ pipeline {
                 )
             }
         }
-    
     }
     post {
         always{
@@ -96,6 +102,6 @@ pipeline {
             slackSend channel: '#integration',
                 color: COLOR_MAP[currentBuild.currentResult],
                 message: "*${currentBuild.currentResult}:* Job ${env.JOB_NAME} build ${env.BUILD_NUMBER} \n More info at: ${env.BUILD_URL}"
-        }       
-}
+        }
+    }
 }
