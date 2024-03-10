@@ -11,10 +11,12 @@ pipeline {
         NEXUS_PASS = 'password'
         RELEASE_REPO = 'vprofile-release'
         CENTRAL_REPO = 'vpro-maven-central'
-        NEXUS_IP = '172.31.19.39' // nexus privateip
+        NEXUS_IP = '172.31.19.39'
         NEXUS_PORT = '8081'
         NEXUS_GRP_REPO = 'vpro-maven-group'
         NEXUS_LOGIN = 'Nexuslogin'
+        SONARSERVER = 'sonarserver'
+        SONARSCANNER = 'sonarscanner'
     }
 
     stages {
@@ -30,7 +32,8 @@ pipeline {
             }
             
         }
-           stage('Test') {
+
+        stage('Test') {
             steps {
                 sh 'mvn -s settings.xml test'
             }
@@ -41,7 +44,8 @@ pipeline {
                 sh 'mvn -s settings.xml checkstyle:checkstyle'
             }
         }
-         stage ('Sonar Analysis') {
+
+        stage ('Sonar Analysis') {
             environment {
                 scannerHome = tool "${SONARSCANNER}" 
             }
@@ -58,8 +62,6 @@ pipeline {
                 }
             }
         }
+    
     }        
 }
-            
-        
-    
